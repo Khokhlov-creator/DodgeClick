@@ -91,11 +91,9 @@ class DodgeClick:
 					self.quite_game()
 
 				if event.type == pygame.MOUSEBUTTONDOWN:
-					print('Hey DOWN')
 					self.mouse_down()
 
 				if event.type == pygame.MOUSEBUTTONUP:
-					print('Hey UP')
 					self.mouse_up()
 
 				pygame.display.flip()
