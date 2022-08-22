@@ -11,15 +11,31 @@ from enum import Enum
 
 walls_locations = [300]
 
+WINDOW_SIZE = 480, 640
 
-class Walls:
-    def __init__(self):
-        self.walls_color = (86, 135, 95)
-        self.walls_x = walls_locations
-        self.random.randint(120, 400)
+class Wall:
+    def __init__(self, x=100, y=100, w=20, h=20, color=(86, 135, 95)):
+        self.w = w
+        self.h = h
+        self.x = x
+        self.y = y
+        self.body = pygame.Rect(x, y, w, h)
+        self.color = color
 
-        self.wall
+    def set_position(self, new_x, new_y):
+        self.body.update(new_x, new_y, self.w, self.h)
 
+    def set_size(self, new_w, new_h):
+        self.body.update(self.x, self.y, new_w, new_h)
+
+    def get_current_x_position(self):
+        return self.x
+
+    def is_up_wall(self):
+        return self.y < WINDOW_SIZE[0] / 2
+
+
+neq_wall = Wall(200, 200)
 
 class Collision:
     def __init__(self):
@@ -52,8 +68,7 @@ class DodgeClick:
         pygame.init()
         height_wall = random.randint(120, 400)
         # height_wall_bot =
-        screenheight, screenwidth = 480, 640
-        my_walls = Walls
+        screenheight, screenwidth = WINDOW_SIZE
         # Define screen size:
         self.screen = pygame.display.set_mode((screenwidth, screenheight))
         # Define rectangular size:
@@ -95,15 +110,13 @@ class DodgeClick:
                               offset_y)  # This magic 4 can be a class attribute -> self.horizontal/vertical_offset
             self.rect_2.move_ip(offset_x, offset_y)
             self.rect_3.move_ip(offset_x, offset_y)
-            self.wall_upper.move_ip(-2, 0)
-            self.wall_bottom.move_ip(-2, 0)
         elif mouse_direction == MouseDirection.DOWN:
             self.rect.move_ip(offset_x, -offset_y)
             self.rect_2.move_ip(offset_x, -offset_y)
             self.rect_3.move_ip(offset_x, -offset_y)
-            self.wall_upper.move_ip(-2, 0)
-            self.wall_bottom.move_ip(-2, 0)
 
+        self.wall_upper.move_ip(-2, 0)
+        self.wall_bottom.move_ip(-2, 0)
 
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 0)
 
