@@ -6,7 +6,8 @@ Hey there!
 import sys
 import pygame
 import random
-
+import array as arr
+from queue import Queue
 from enum import Enum
 
 walls_locations = [300]
@@ -17,7 +18,6 @@ class Walls:
         self.walls_color = (86, 135, 95)
         self.walls_x = walls_locations
         self.random.randint(120, 400)
-
         self.wall
 
 
@@ -62,8 +62,14 @@ class DodgeClick:
         self.rect_color = (255, 45, 45)
         self.rect_2 = pygame.Rect(175, 200, 10, 18)
         self.rect_3 = pygame.Rect(170, 205, 5, 9)
-        self.wall_upper = pygame.Rect(620, 0, 20, height_wall - 90)
-        self.wall_bottom = pygame.Rect(620, height_wall + 90, 20, 480)
+
+        self.wall_upper_1_front = pygame.Rect(620, 0, 20, height_wall - 90)
+        self.wall_bottom_1_front = pygame.Rect(620, height_wall + 90, 20, 480)
+        self.wall_upper_2_front = pygame.Rect(780, 0, 20, height_wall - 90)
+        self.wall_bottom_2_front = pygame.Rect(780, height_wall + 90, 20, 480)
+        self.wall_upper_3_front = pygame.Rect(940, 0, 20, height_wall - 90)
+        self.wall_bottom_3_front = pygame.Rect(940, height_wall + 90, 20, 480)
+        self.q = Queue(maxsize=6)
 
     # TODO: u may add new figures here
 
@@ -80,30 +86,58 @@ class DodgeClick:
             offset_y = 0  # TODO: make it as GAME OVER
         pygame.draw.rect(self.screen, (69, 45, 45), self.rect_2, 0)
         pygame.draw.rect(self.screen, (69, 45, 45), self.rect_3, 0)
-        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_upper)
-        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_bottom)
+        self.walls = list
+        #for x in range(Queue.maxsize):
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_upper_1_front)
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_bottom_1_front)
 
-        if pygame.Rect.colliderect(self.rect, self.wall_upper) or pygame.Rect.colliderect(self.rect, self.wall_bottom):
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_upper_2_front)
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_bottom_2_front)
+
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_upper_3_front)
+        pygame.draw.rect(self.screen, (86, 135, 95), self.wall_bottom_3_front)
+
+        self.queued_wall_upper=self.wall_upper_1_front
+        self.queued_wall_bottom=self.wall_bottom_1_front
+
+        if pygame.Rect.colliderect(self.rect, self.queued_wall_upper) or pygame.Rect.colliderect(self.rect,
+                                                                                                  self.queued_wall_bottom):
             offset_y = 0
-            self.wall_upper.move_ip(+2, 0)
-            self.wall_bottom.move_ip(+2, 0)
-        else:
-            pass
+            self.wall_upper_1_front.move_ip(+2, 0)
+            self.wall_bottom_1_front.move_ip(+2, 0)
+            self.wall_upper_2_front.move_ip(+2, 0)
+            self.wall_bottom_2_front.move_ip(+2, 0)
+            self.wall_upper_3_front.move_ip(+2, 0)
+            self.wall_bottom_3_front.move_ip(+2, 0)
+        elif self.queued_wall_upper.x < self.rect.x:
+            self.queued_wall_bottom = self.wall_bottom_2_front
+            self.queued_wall_upper = self.wall_upper_2_front
+            self.wall_upper_2_front = self.wall_upper_3_front
+            self.wall_bottom_2_front = self.wall_bottom_3_front
+
 
         if mouse_direction == MouseDirection.UP:  # You may see how good it is to have enums. U just look at code and understands what it means
             self.rect.move_ip(offset_x,
                               offset_y)  # This magic 4 can be a class attribute -> self.horizontal/vertical_offset
             self.rect_2.move_ip(offset_x, offset_y)
             self.rect_3.move_ip(offset_x, offset_y)
-            self.wall_upper.move_ip(-2, 0)
-            self.wall_bottom.move_ip(-2, 0)
+            self.wall_upper_1_front.move_ip(-2, 0)
+            self.wall_bottom_1_front.move_ip(-2, 0)
+            self.wall_upper_2_front.move_ip(-2, 0)
+            self.wall_bottom_2_front.move_ip(-2, 0)
+            self.wall_upper_3_front.move_ip(-2, 0)
+            self.wall_bottom_3_front.move_ip(-2, 0)
+
         elif mouse_direction == MouseDirection.DOWN:
             self.rect.move_ip(offset_x, -offset_y)
             self.rect_2.move_ip(offset_x, -offset_y)
             self.rect_3.move_ip(offset_x, -offset_y)
-            self.wall_upper.move_ip(-2, 0)
-            self.wall_bottom.move_ip(-2, 0)
-
+            self.wall_upper_1_front.move_ip(-2, 0)
+            self.wall_bottom_1_front.move_ip(-2, 0)
+            self.wall_upper_2_front.move_ip(-2, 0)
+            self.wall_bottom_2_front.move_ip(-2, 0)
+            self.wall_upper_3_front.move_ip(-2, 0)
+            self.wall_bottom_3_front.move_ip(-2, 0)
 
         pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 0)
 
