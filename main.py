@@ -82,12 +82,13 @@ class DodgeClick:
         pygame.draw.rect(self.screen, (69, 45, 45), self.rect_3, 0)
         pygame.draw.rect(self.screen, (86, 135, 95), self.wall_upper)
         pygame.draw.rect(self.screen, (86, 135, 95), self.wall_bottom)
-        if not pygame.Rect.colliderect(self.rect, self.wall_upper) or not pygame.Rect.colliderect(self.rect, self.wall_bottom):
-            pass
-        else:
+
+        if pygame.Rect.colliderect(self.rect, self.wall_upper) or pygame.Rect.colliderect(self.rect, self.wall_bottom):
             offset_y = 0
             self.wall_upper.move_ip(+2, 0)
             self.wall_bottom.move_ip(+2, 0)
+        else:
+            pass
 
         if mouse_direction == MouseDirection.UP:  # You may see how good it is to have enums. U just look at code and understands what it means
             self.rect.move_ip(offset_x,
